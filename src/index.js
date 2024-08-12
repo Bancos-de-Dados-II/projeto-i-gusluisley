@@ -5,7 +5,7 @@ const restaurant = require('./db/restaurante.db');
 const { findAll, addRestaurant } = require('./controller/controller');
 const port = process.env.API_PORT;
 const app = express();
-
+app.use(express.json());
 app.get('/', findAll)
 
 app.post('/', addRestaurant)

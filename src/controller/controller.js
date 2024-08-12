@@ -8,7 +8,7 @@ const findAll = async (req, res) => {
 const addRestaurant = async (req, res) => {
     console.log(req.body)
     const result = await restaurant.create(req.body)
-    res.json(result);
+    res.json(req.body);
 } 
 
 module.exports = {findAll, addRestaurant}
