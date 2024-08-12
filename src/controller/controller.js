@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const restaurant = require ('../db/restaurante.db')
 
 const findAll = async (req, res) => {
@@ -6,9 +7,31 @@ const findAll = async (req, res) => {
 }
 
 const addRestaurant = async (req, res) => {
-    console.log(req.body)
     const result = await restaurant.create(req.body)
     res.json(req.body);
 } 
 
-module.exports = {findAll, addRestaurant}
+const removeRestaurantByName = async (req, res) => {
+    const name = req.params.name;
+    let result;
+    if(result = await restaurant.findOne({where:{name: name}})){
+        result.destroy();
+        res.json(result);
+    }
+    else{
+        res.json("Restaurante não encontrado!")
+    }
+}
+
+const findByName = async (req, res) => {
+    const name = req.params.name;
+    let result;
+    if(result = await restaurant.findOne({where:{name: name}})){
+        res.json(result)
+    }
+    else{
+        res.json("Restaurante não encontrado");
+    }
+}
+
+module.exports = {findAll, addRestaurant, removeRestaurantByName, findByName}
