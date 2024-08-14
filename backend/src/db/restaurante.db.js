@@ -1,6 +1,6 @@
 const sequelize = require('./sequelize') 
 
-const {DataTypes, GEOMETRY} = require('sequelize')
+const {DataTypes} = require('sequelize')
 
 
 const Restaurant = sequelize.define('Restaurant',  {

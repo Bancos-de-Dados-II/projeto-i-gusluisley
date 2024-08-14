@@ -1,13 +1,12 @@
-import { MapContainer, TileLayer, useMapEvents, useMap, useMapEvent} from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, useMapEvents} from 'react-leaflet'
 import { Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'
 import './style.css'
 import { useState } from 'react';
-import { latLng } from 'leaflet';
 import L from 'leaflet';
-import axios from 'axios';
 import marker from '../../assets/marker.icon.jpg';
-const baseUrl = 'http://localhost:4000'
+import { useRestaurantData } from '../../hooks/useRestaurantData';
+import { useRestaurantDataMutate } from '../../hooks/useRestaurantDataMutate';
 
 
 const myIcon = new L.Icon({
@@ -24,17 +23,28 @@ function Map() {
   const [markerPosition, setMarkerPosition] = useState(initialPosition)
   const [inputValue, setInputValue] = useState('')
 
-  async function getAllRestaurantes() {
-    const result = await axios.get(baseUrl)
-    console.log(result.data)
+  const {mutate} = useRestaurantDataMutate()
+  const {data} = useRestaurantData()
+
+  function GetAllRestaurantes() {
+    console.log(data)
+    return data?.map((restaurant) => (
+      <Marker key={restaurant.id} position={restaurant.localization} icon={myIcon} />
+    ))
   }
-  async function salvarRestaurante() {
+  
+  function salvarRestaurante() {
     const name = inputValue;
-    const loc = {
+    const localization = {
       type:"Point",
-      coordinates:[markerPosition]
+      coordinates: [markerPosition[0],markerPosition[1]]
     }
-    const result = await axios.post(baseUrl, {name, loc})
+    const restaurantData = {
+      name,
+      localization
+    }
+    
+    mutate(restaurantData)   
   }
 
   function updateInput (e){
@@ -62,11 +72,12 @@ function Map() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          {/* <GetAllRestaurantes/> */}
           <SetMarker/>
         </MapContainer>
         <input value={inputValue} onChange={updateInput} placeholder='Ex: Fast-Lanches'/>
         <button onClick={salvarRestaurante}>Salvar</button>
-        <button onClick={getAllRestaurantes}>Get</button>
+        <button onClick={GetAllRestaurantes}>Get</button>
       </>
     );
 }
