@@ -34,4 +34,19 @@ const findByName = async (req, res) => {
     }
 }
 
-module.exports = {findAll, addRestaurant, removeRestaurantByName, findByName}
+const updateLocalization = async (req, res) => {
+    const newLoc = req.body;
+    console.log(newLoc)
+    let result;
+    const restaurantName = req.params.name;
+    if(result = await restaurant.findOne({where:{name: restaurantName}})){
+        result.localization = newLoc;
+        await result.save();
+        res.json(result)
+    }
+    else{
+        res.json("Restaurante não encontrado");
+    }
+}
+
+module.exports = {findAll, addRestaurant, removeRestaurantByName, findByName, updateLocalization}
