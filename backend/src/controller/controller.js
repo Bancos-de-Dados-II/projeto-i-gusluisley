@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const restaurant = require ('../db/restaurante.db')
 
 const findAll = async (req, res) => {
@@ -7,8 +6,13 @@ const findAll = async (req, res) => {
 }
 
 const addRestaurant = async (req, res) => {
+    console.log(req.body)
+    if(req.body.localization.coordinates.lat!==null){
+        const arrayBody = [req.body.localization.coordinates.lat, req.body.localization.coordinates.lng]
+        req.body.localization.coordinates = arrayBody;
+    }
     const result = await restaurant.create(req.body)
-    res.json(req.body);
+    res.json(result);
 } 
 
 const removeRestaurantByName = async (req, res) => {
